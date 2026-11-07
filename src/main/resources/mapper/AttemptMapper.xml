@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqlpractice.mapper.AttemptMapper">
+
+    <insert id="insert" parameterType="com.sqlpractice.entity.Attempt"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into attempt (user_id, status, question_ids, started_at)
+        values (#{userId}, #{status}, #{questionIds}, now())
+    </insert>
+
+    <select id="findById" resultType="com.sqlpractice.entity.Attempt">
+        select * from attempt where id = #{id}
+    </select>
+
+    <select id="findByUserId" resultType="com.sqlpractice.entity.Attempt">
+        select * from attempt where user_id = #{userId} order by id desc limit 50
+    </select>
+
+    <select id="listByStatus" resultType="com.sqlpractice.entity.Attempt">
+        select * from attempt
+        <where>
+            <if test="status != null and status != ''">
+                status = #{status}
+            </if>
+        </where>
+        order by submitted_at desc, id desc
+        limit #{limit}
+    </select>
+
+    <select id="listAll" resultType="com.sqlpractice.entity.Attempt">
+        select * from attempt order by id desc limit #{limit}
+    </select>
+
+    <update id="submit">
+        update attempt
+        set status = 'PENDING_REVIEW', submitted_at = now()
+        where id = #{id} and user_id = #{userId} and status = 'ANSWERING'
+    </update>
+
+    <update id="completeReview">
+        update attempt
+        set status = 'REVIEWED',
+            reviewed_at = now(),
+            reviewer_id = #{reviewerId},
+            overall_comment = #{overallComment},
+            score = #{score}
+        where id = #{id}
+    </update>
+</mapper>

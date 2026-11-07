@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqlpractice.mapper.QuestionMapper">
+
+    <select id="countAll" resultType="int">
+        select count(*) from question
+    </select>
+
+    <select id="findAll" resultType="com.sqlpractice.entity.Question">
+        select * from question order by id
+    </select>
+
+    <select id="listEnabled" resultType="com.sqlpractice.entity.Question">
+        select * from question where enabled = 1 order by id
+    </select>
+
+    <select id="findById" resultType="com.sqlpractice.entity.Question">
+        select * from question where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.sqlpractice.entity.Question"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into question (title, description, difficulty, tags, reference_sql, explanation,
+                              order_sensitive, enabled, created_at)
+        values (#{title}, #{description}, #{difficulty}, #{tags}, #{referenceSql}, #{explanation},
+                #{orderSensitive}, #{enabled}, now())
+    </insert>
+
+    <update id="update" parameterType="com.sqlpractice.entity.Question">
+        update question
+        set title = #{title},
+            description = #{description},
+            difficulty = #{difficulty},
+            tags = #{tags},
+            reference_sql = #{referenceSql},
+            explanation = #{explanation},
+            order_sensitive = #{orderSensitive},
+            enabled = #{enabled}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from question where id = #{id}
+    </delete>
+</mapper>

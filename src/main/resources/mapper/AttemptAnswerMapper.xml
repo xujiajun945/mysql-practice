@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqlpractice.mapper.AttemptAnswerMapper">
+
+    <select id="findByAttempt" resultType="com.sqlpractice.entity.AttemptAnswer">
+        select * from attempt_answer where attempt_id = #{attemptId} order by id
+    </select>
+
+    <select id="findByAttemptAndQuestion" resultType="com.sqlpractice.entity.AttemptAnswer">
+        select * from attempt_answer
+        where attempt_id = #{attemptId} and question_id = #{questionId}
+    </select>
+
+    <insert id="insertOrUpdate" parameterType="com.sqlpractice.entity.AttemptAnswer">
+        insert into attempt_answer
+            (attempt_id, question_id, user_sql, auto_result, auto_message,
+             user_result_json, expected_result_json, elapsed_ms, updated_at)
+        values
+            (#{attemptId}, #{questionId}, #{userSql}, #{autoResult}, #{autoMessage},
+             #{userResultJson}, #{expectedResultJson}, #{elapsedMs}, now())
+        on duplicate key update
+            user_sql = values(user_sql),
+            auto_result = values(auto_result),
+            auto_message = values(auto_message),
+            user_result_json = values(user_result_json),
+            expected_result_json = values(expected_result_json),
+            elapsed_ms = values(elapsed_ms),
+            correct = null,
+            review_comment = null,
+            reviewed_by = null,
+            reviewed_at = null,
+            updated_at = now()
+    </insert>
+
+    <update id="review">
+        update attempt_answer
+        set correct = #{correct},
+            review_comment = #{comment},
+            reviewed_by = #{reviewerId},
+            reviewed_at = now()
+        where id = #{id} and attempt_id = #{attemptId}
+    </update>
+</mapper>

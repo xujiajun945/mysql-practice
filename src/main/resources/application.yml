@@ -1,0 +1,70 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sql-practice
+  data:
+    redis:
+      host: 192.168.184.129
+      port: 6379
+      password: valkey.xujiajun945
+      timeout: 3s
+      lettuce:
+        pool:
+          max-active: 16
+          max-idle: 8
+          min-idle: 2
+  jackson:
+    default-property-inclusion: non_null
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.sqlpractice: INFO
+    com.sqlpractice.mapper: DEBUG
+
+app:
+  jwt:
+    # Base64 编码的 32 字节密钥，生产环境请替换
+    secret: 5jwxekQhv66w9q9BLjxcUCW4AOC7I3hjqZ7utkk22jg=
+    access-ttl-minutes: 30
+    refresh-ttl-days: 7
+  initial-admin:
+    username: admin
+    password: Admin@123
+    nickname: 管理员
+  ddl-schemas: practice,employees_lab
+  query-timeout-seconds: 5
+  max-result-rows: 1000
+  grading-rows-limit: 2000
+  datasource:
+    app:
+      jdbc-url: "jdbc:mysql://192.168.184.129:3306/sqlpractice?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=utf8"
+      username: sqlpractice_app
+      password: SqlApp2024
+      maximum-pool-size: 10
+      minimum-idle: 2
+      pool-name: app-pool
+    ro:
+      jdbc-url: "jdbc:mysql://192.168.184.129:3306/employees?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=utf8"
+      username: sqllab_ro
+      password: SqlRo2024
+      maximum-pool-size: 10
+      minimum-idle: 2
+      pool-name: ro-pool
+    ddl:
+      jdbc-url: "jdbc:mysql://192.168.184.129:3306/practice?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=utf8"
+      username: sqllab_ddl
+      password: SqlDdl2024
+      maximum-pool-size: 5
+      minimum-idle: 1
+      pool-name: ddl-pool

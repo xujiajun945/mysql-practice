@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqlpractice.mapper.UserMapper">
+
+    <select id="findByUsername" resultType="com.sqlpractice.entity.User">
+        select * from sys_user where username = #{username}
+    </select>
+
+    <select id="findById" resultType="com.sqlpractice.entity.User">
+        select * from sys_user where id = #{id}
+    </select>
+
+    <select id="findAll" resultType="com.sqlpractice.entity.User">
+        select * from sys_user order by id desc
+    </select>
+
+    <select id="findByStatus" resultType="com.sqlpractice.entity.User">
+        select * from sys_user where status = #{status} order by id desc
+    </select>
+
+    <select id="countByUsername" resultType="int">
+        select count(*) from sys_user where username = #{username}
+    </select>
+
+    <select id="countByRoleId" resultType="int">
+        select count(*) from sys_user where role_id = #{roleId}
+    </select>
+
+    <insert id="insert" parameterType="com.sqlpractice.entity.User"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user (username, password, nickname, role_id, status, created_at)
+        values (#{username}, #{password}, #{nickname}, #{roleId}, #{status}, now())
+    </insert>
+
+    <update id="updateStatus">
+        update sys_user
+        set status = #{status},
+            reject_reason = #{reason},
+            approved_at = if(#{status} = 'ACTIVE', now(), approved_at)
+        where id = #{id}
+    </update>
+
+    <update id="updateRole">
+        update sys_user set role_id = #{roleId} where id = #{id}
+    </update>
+
+    <update id="updateNickname">
+        update sys_user set nickname = #{nickname} where id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        update sys_user set password = #{password} where id = #{id}
+    </update>
+
+    <update id="touchLogin">
+        update sys_user set last_login_at = now() where id = #{id}
+    </update>
+</mapper>

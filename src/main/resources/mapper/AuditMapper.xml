@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqlpractice.mapper.AuditMapper">
+
+    <insert id="insert" parameterType="com.sqlpractice.entity.AuditLog"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into audit_log
+            (user_id, username, action, schema_name, table_name, sql_text,
+             success, message, elapsed_ms, ip, created_at)
+        values
+            (#{userId}, #{username}, #{action}, #{schemaName}, #{tableName}, #{sqlText},
+             #{success}, #{message}, #{elapsedMs}, #{ip}, now())
+    </insert>
+
+    <select id="list" resultType="com.sqlpractice.entity.AuditLog">
+        select * from audit_log order by id desc limit #{limit} offset #{offset}
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from audit_log
+    </select>
+</mapper>

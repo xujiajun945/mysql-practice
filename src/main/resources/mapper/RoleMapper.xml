@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqlpractice.mapper.RoleMapper">
+
+    <select id="findAll" resultType="com.sqlpractice.entity.Role">
+        select * from sys_role order by id
+    </select>
+
+    <select id="findById" resultType="com.sqlpractice.entity.Role">
+        select * from sys_role where id = #{id}
+    </select>
+
+    <select id="findByCode" resultType="com.sqlpractice.entity.Role">
+        select * from sys_role where code = #{code}
+    </select>
+
+    <insert id="insert" parameterType="com.sqlpractice.entity.Role"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into sys_role (code, name, capabilities, allowed_schemas, built_in, created_at)
+        values (#{code}, #{name}, #{capabilities}, #{allowedSchemas}, #{builtIn}, now())
+    </insert>
+
+    <update id="update" parameterType="com.sqlpractice.entity.Role">
+        update sys_role
+        set name = #{name},
+            capabilities = #{capabilities},
+            allowed_schemas = #{allowedSchemas}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_role where id = #{id}
+    </delete>
+</mapper>
